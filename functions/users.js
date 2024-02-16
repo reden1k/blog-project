@@ -2,41 +2,72 @@ import readlineSync from 'readline-sync';
 const dataOfUsers = [];
 const userType = {ADMIN: 'admin', MODERATOR: 'moderator', MEMBER: 'member'};
  
+let id = 0;
 export const registration = () => {
-    const o = {};
-    o.userName = readlineSync.question('Username: ');
-    o.email = readlineSync.question('Email: '); // do regexp for correct email
-    o.pass = readlineSync.question('Password: ');
-    if (o.pass.endsWith('ADMIN')) {
-        o.userType = userType.ADMIN;
-    } else if (o.pass.endsWith('MODERATOR')) {
-        o.userType = userType.MODERATOR;
-    } else {
-        o.userType = userType.MEMBER;
+    const account = {};
+    account.userID = id += 1;
+    account.userName = readlineSync.question('Username: ');
+    let email = readlineSync.question('Email: ');
+    while (!checkEmail(email)) {
+        email = readlineSync.question('Wrong email format, type correct again: ');
     }
-    o.regDate = new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" })
-    dataOfUsers.push(o);
+    account.pass = readlineSync.question('Password: ');
+
+    if (account.pass.endsWith('ADMIN')) {
+        account.userType = userType.ADMIN;
+    } else if (account.pass.endsWith('MODERATOR')) {
+        account.userType = userType.MODERATOR;
+    } else {
+        account.userType = userType.MEMBER;
+    }
+
+    account.regDate = new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" })
+
+    dataOfUsers.push(account);
+
     console.log('\nRegistration succesfully!')
     return dataOfUsers;
 }
 
-export const login = () => { // giving a current account ({}) if already logged in, return 'Already logged in account!'
-    const userNameOrEmail = readlineSync.question('Type your email or username: ');
-    const pass = readlineSync.question('Type password: ')
-    if (dataOfUsers.length !== 0) {
-        for (const user of dataOfUsers) {
-            if ((user.userName === userNameOrEmail || user.email === userNameOrEmail) && user.pass === pass) {
-                console.log('\nYou logged in account!');
-                return user;
+export const login = (currentAccount) => {
+    if (currentAccount) {
+        if (dataOfUsers.length !== 0) {
+        const userNameOrEmail = readlineSync.question('Type your email or username: ');
+        const pass = readlineSync.question('Type password: ')
+            for (const user of dataOfUsers) {
+                if ((user.userName === userNameOrEmail || user.email === userNameOrEmail) && user.pass === pass) {
+                    console.log('\nYou logged in account!');
+                    return user;
+                }
             }
+            
+            return '\nWrong data!';
         }
-        
-        return '\nWrong data!';
+        return '\nRight now we have no accounts in our data base!';
     }
-    return '\nRight now we have no accounts in our data base!';
+    return '\nYou\'re already logged in!';
 }
 
-export const logout = (currentAccount) => { // giving current account ({some data...}) if account is {} return 'You not logged in account!'
-    console.log('You logged out!')
-   return currentAccount = {};
+export const logout = (currentAccount) => {
+    console.log()
+    if (!isEmpty(currentAccount)) {
+        console.log('You logged out!')
+        return {};
+    }
+    return '\nYou\'re not logged in account!';
+}
+
+export const isEmpty = (obj) => {
+    for (const prop in obj) {
+        if (Object.hasOwn(obj, prop)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+const checkEmail = (email) => {
+    const pattern = /\b[A-Za-z0-9._%+-]+@(?:mail\.ru|gmail\.com)\b/;
+
+    return pattern.test(email);
 }
