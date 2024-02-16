@@ -123,7 +123,7 @@ export const getPosts = () => {
     return posts;
 }
 
-export const getPostById = (postID) => {
+const getPostById = (postID) => {
     if (posts.length !== 0) {
         for (const post of posts) {
             if (post.id === postID) {

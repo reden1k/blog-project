@@ -1,5 +1,5 @@
 import { registration, login, logout } from './functions/users.js';
-import { makePost, likePost, editPost, deletePost, commentPost } from './functions/postFunctions.js';
+import { makePost, likePost, editPost, deletePost, commentPost, getPosts } from './functions/postFunctions.js';
 import readlineSync from 'readline-sync';
 
 const program = () => {
@@ -18,13 +18,25 @@ const program = () => {
                 break;
             case '/logout': 
                 currentAccount = logout(currentAccount);
-                console.log(currentAccount)
                 break;
             case '/makePost':
-                console.log(makePost(currentAccount)); //delete this after check func
+                makePost(currentAccount); //delete this after check func
                 break;
             case '/editPost': 
-                console.log(editPost(currentAccount));
+                editPost(currentAccount);
+                break;
+            case '/likePost': 
+                likePost(currentAccount);
+                break;
+            case '/commentPost':
+                commentPost(currentAccount);
+                break;
+            case '/deletePost':
+                deletePost(currentAccount);
+                break;
+            case '/getPosts':
+                getPosts();
+                break;
             case '/exit':
                 break;
             case '/help':
