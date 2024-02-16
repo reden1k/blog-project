@@ -1,6 +1,6 @@
 import readlineSync from 'readline-sync';
 const dataOfUsers = [];
-const userType = {ADMIN: 'admin', MODERATOR: 'moderator', MEMBER: 'member'};
+export const userType = {ADMIN: 'admin', MODERATOR: 'moderator', MEMBER: 'member'};
  
 let id = 0;
 export const registration = () => {
@@ -40,21 +40,23 @@ export const login = (currentAccount) => {
                     return user;
                 }
             }
-            
-            return '\nWrong data!';
+            console.log('\nWrong data!')
+            return undefined;
         }
-        return '\nRight now we have no accounts in our data base!';
+        console.log('\nRight now we have no accounts in our data base!');
+        return undefined;
     }
-    return '\nYou\'re already logged in!';
+    console.log('\nYou\'re already logged in!');
+    return currentAccount;
 }
 
 export const logout = (currentAccount) => {
-    console.log()
     if (!isEmpty(currentAccount)) {
         console.log('You logged out!')
         return {};
     }
-    return '\nYou\'re not logged in account!';
+    console.log('\nYou\'re not logged in account!');
+    return currentAccount;
 }
 
 export const isEmpty = (obj) => {
