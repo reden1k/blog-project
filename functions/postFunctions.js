@@ -1,12 +1,12 @@
-import { isEmpty } from "./users";
+import { isEmpty, userType } from "./users.js";
 import readlineSync from 'readline-sync';
 
 let posts = [];
 let id = 0;
 export const makePost = (postBy) => {
-    const title = readlineSync.question('Type title: ');
-    const text = readlineSync.question('Type text: ');
     if (!isEmpty(postBy)) {
+        const title = readlineSync.question('Type title: ');
+        const text = readlineSync.question('Type text: ');
         if (postBy.userType === userType.ADMIN) {
             posts.push({
                 date: new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" }),
@@ -42,13 +42,17 @@ export const editPost = (currentAccount) => {
                     post[what] = to;
                     return post;
                 }
-                return 'You trying change something wrong, make it correctly!';
+                console.log('You trying change something wrong, make it correctly!');
+                return ;
             }
-            return 'You dont have permission for this!'
+            console.log('You dont have permission for this!');
+            return undefined;
         }
-        return 'Something went wrong, try edit post again later.';
+        console.log('Something went wrong, try edit post again later.');
+        return undefined;
     }
-    return 'We didnt post anything yet!'
+    console.log('We didnt post anything yet!');
+    return undefined;
 };
 
 export const likePost = (currentAccount) => {
@@ -64,14 +68,16 @@ export const likePost = (currentAccount) => {
             post.likesByUsers.push(o);
             return post;
         }
-        return 'Something went wrong, you cant like this post right now.';
+        console.log('Something went wrong, you cant like this post right now.');
+        return undefined;
     }
-    return 'We didnt post anything yet!';
+    console.log('We didnt post anything yet!');
+    return undefined;
     
 }
 
 export const commentPost = (currentAccount) => {
-    if (posts.length() !== 0) {
+    if (posts.length !== 0) {
         if (!isEmpty(currentAccount)) {
             getPosts();
             const id = readlineSync.question('Which post you want to comment? (type postID) ');
@@ -85,9 +91,11 @@ export const commentPost = (currentAccount) => {
             post.comments.push(o);
             return post;
         }
-        return 'Something went wrong, try to type comment later.';
+        console.log('Something went wrong, try to type comment later.');
+        return undefined;
     }
-    return 'We didnt post anything yet!';
+    console.log('We didnt post anything yet!');
+    return undefined;
 };
 
 export const deletePost = (postID, currentAccount) => {
@@ -98,11 +106,12 @@ export const deletePost = (postID, currentAccount) => {
             return posts;
         }
     }
-    return 'Something went wrong, try to delete post later.';
+    console.log('Something went wrong, try to delete post later.');
+    return undefined;
 };
 
 export const getPosts = () => {
-    if (post.length !== 0) {
+    if (posts.length !== 0) {
         let count = 0;
         for (const post of posts) {
             console.log(post);
@@ -110,7 +119,8 @@ export const getPosts = () => {
         }
         return count > 1 ? console.log(`${count} Post printed!`) : console.log(`${count} Posts printed!`);
     }
-    return `We didnt post anything yet`;
+    console.log(`We didnt post anything yet`);
+    return posts;
 }
 
 export const getPostById = (postID) => {
@@ -120,7 +130,9 @@ export const getPostById = (postID) => {
                 return post;
             }
         }
-        return 'Post with this ID didnt exist';
+        console.log('Post with this ID didnt exist');
+        return undefined;
     }
-    return 'We didnt post anything yet';
+    console.log('We didnt post anything yet');
+    return undefined;
 }
