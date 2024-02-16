@@ -1,4 +1,5 @@
 import { registration, login, logout } from './functions/users.js';
+import { makePost, likePost, editPost, deletePost, commentPost } from './functions/postFunctions.js';
 import readlineSync from 'readline-sync';
 
 const program = () => {
@@ -8,21 +9,26 @@ const program = () => {
     while(input !== '/exit') {
         input = readlineSync.question('command: ')
         switch (input) {
-            case '/registration': 
+            case '/reg': 
                 registration();
                 break;
             case '/login': 
-                currentAccount = login();
+                currentAccount = login(currentAccount);
                 console.log(currentAccount)
                 break;
             case '/logout': 
-                currentAccount = logout();
+                currentAccount = logout(currentAccount);
                 console.log(currentAccount)
                 break;
+            case '/makePost':
+                console.log(makePost(currentAccount)); //delete this after check func
+                break;
+            case '/editPost': 
+                console.log(editPost(currentAccount));
             case '/exit':
                 break;
             case '/help':
-                console.log('/registration - Регистрация \n/login - вход в аккаунт \n/logout - выйти из аккаунта');
+                console.log('/reg - Регистрация \n/login - вход в аккаунт \n/logout - выйти из аккаунта');
                 break;
             default: console.log('Unknown command\n');
         }
