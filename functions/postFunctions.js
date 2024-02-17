@@ -19,11 +19,14 @@ export const makePost = (postBy) => {
                 comments: [],
                 postID: id += 1,
             });
-            return 'Post created!'
+            console.log('Post created!');
+            return posts;
         }
-        return 'You dont have permission for this!';
+        console.log('You dont have permission for this!');
+        return undefined;
     }
-    return 'Something went wrong, try make post later.'
+    console.log('Something went wrong, try make post later.');
+    return undefined;
 };
 
 export const editPost = (currentAccount) => {
@@ -43,7 +46,7 @@ export const editPost = (currentAccount) => {
                     return post;
                 }
                 console.log('You trying change something wrong, make it correctly!');
-                return ;
+                return undefined;
             }
             console.log('You dont have permission for this!');
             return undefined;
