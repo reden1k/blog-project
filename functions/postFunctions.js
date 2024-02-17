@@ -1,7 +1,6 @@
 import { isEmpty, userType } from "./users.js";
 import readlineSync from 'readline-sync';
 
-let posts = [];
 let id = 0;
 export const makePost = (postBy) => {
     if (!isEmpty(postBy)) {
@@ -9,15 +8,14 @@ export const makePost = (postBy) => {
         const text = readlineSync.question('Type text: ');
         if (postBy.userType === userType.ADMIN) {
             posts.push({
-                date: new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" }),
+                postID: id += 1,
+                date: getDate(),
                 title: title,
                 text: text,
                 postedBy: postBy,
-                editedPost: false,
                 editedTime: null,
                 likesByUsers: [],
                 comments: [],
-                postID: id += 1,
             });
             console.log('Post created!');
             return posts;
@@ -35,14 +33,15 @@ export const editPost = (currentAccount) => {
         if (!isEmpty(currentAccount)) {
             if (currentAccount.userType === userType.ADMIN || currentAccount.userType === userType.MODERATOR) {
                 getPosts();
-                const id = readlineSync.question('Which post do you want edit? (type postID) ');
-                const post = getPostById(Number(id));
+                const id = readlineSync.question('Which post do you want edit? (type postID) '); // Need add check for correct input
+                const post = getPostById(Number(id)); //make sure if getPostId() not correct it stops here!
                 console.log('You can only change: title, text')
                 const what = toUpperCase(readlineSync.question('What you want to change?: '));
                 let to;
                 if (Object.hasOwn(changePart, what)) {
                     what.toLowerCase() === changePart.TITLE ? to = readlineSync.question('Type new title: ') : to = readlineSync.question('Type new text: ');
                     post[what] = to;
+                    post.editedTime = getDate();
                     return post;
                 }
                 console.log('You trying change something wrong, make it correctly!');
@@ -62,11 +61,11 @@ export const likePost = (currentAccount) => {
     if (posts.length !== 0) {
         if (!isEmpty(currentAccount)) {
             getPosts();
-            const id = readlineSync.question('Which post you want to like? (type postID) ');
-            const post = getPostById(Number(id));
+            const id = readlineSync.question('Which post you want to like? (type postID) '); // Need add check for correct input
+            const post = getPostById(Number(id)); //make sure if getPostId() not correct it stops here!
             const o = {
                 account: currentAccount,
-                likeDate: new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" }),
+                likeDate: getDate(),
             }
             post.likesByUsers.push(o);
             return post;
@@ -83,13 +82,13 @@ export const commentPost = (currentAccount) => {
     if (posts.length !== 0) {
         if (!isEmpty(currentAccount)) {
             getPosts();
-            const id = readlineSync.question('Which post you want to comment? (type postID) ');
-            const post = getPostById(Number(id));
+            const id = readlineSync.question('Which post you want to comment? (type postID) '); // Need add check for correct input
+            const post = getPostById(Number(id)); //make sure if getPostId() not correct it stops here!
             const input = readlineSync.question('Type your comment: ');
             const o = {
                 account: currentAccount,
                 comment: input,
-                commentDate: new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" }),
+                commentDate: getDate(),
             }
             post.comments.push(o);
             return post;
@@ -126,7 +125,7 @@ export const getPosts = () => {
     return posts;
 }
 
-const getPostById = (postID) => {
+export const getPostById = (postID) => {
     if (posts.length !== 0) {
         for (const post of posts) {
             if (post.id === postID) {
@@ -139,3 +138,5 @@ const getPostById = (postID) => {
     console.log('We didnt post anything yet');
     return undefined;
 }
+
+const getDate = () => new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" });
