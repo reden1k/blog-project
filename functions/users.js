@@ -1,5 +1,5 @@
 import readlineSync from 'readline-sync';
-const dataOfUsers = [];
+import { users } from 'data.js';
 export const userType = {ADMIN: 'admin', MODERATOR: 'moderator', MEMBER: 'member'};
  
 let id = 0;
@@ -12,7 +12,7 @@ export const registration = () => {
         email = readlineSync.question('Wrong email format, type correct again: ');
     }
     account.pass = readlineSync.question('Password: ');
-
+    
     if (account.pass.endsWith('ADMIN')) {
         account.userType = userType.ADMIN;
     } else if (account.pass.endsWith('MODERATOR')) {
@@ -23,18 +23,18 @@ export const registration = () => {
 
     account.regDate = new Date().toLocaleString("ru-EU", { timeZone: "Europe/Moscow" })
 
-    dataOfUsers.push(account);
+    users.push(account);
 
     console.log('\nRegistration succesfully!')
-    return dataOfUsers;
+    return users;
 }
 
 export const login = (currentAccount) => {
     if (currentAccount) {
-        if (dataOfUsers.length !== 0) {
+        if (users.length !== 0) {
         const userNameOrEmail = readlineSync.question('Type your email or username: ');
         const pass = readlineSync.question('Type password: ')
-            for (const user of dataOfUsers) {
+            for (const user of users) {
                 if ((user.userName === userNameOrEmail || user.email === userNameOrEmail) && user.pass === pass) {
                     console.log('\nYou logged in account!');
                     return user;
